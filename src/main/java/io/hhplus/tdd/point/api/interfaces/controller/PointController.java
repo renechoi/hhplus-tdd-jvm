@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeResponse;
 import io.hhplus.tdd.point.api.application.facade.PointFacade;
 import io.hhplus.tdd.point.api.domain.entity.PointHistory;
@@ -43,8 +44,8 @@ public class PointController {
      * 특정 유저의 포인트를 충전하는 기능을 작성
      */
     @PatchMapping("{id}/charge")
-    public ResponseEntity<UserPointChargeResponse> charge(@PathVariable long id, @RequestBody long amount) {
-        return ResponseEntity.ok(facade.charge(id, amount));
+    public ResponseEntity<UserPointChargeResponse> charge(@PathVariable long id, @RequestBody UserPointChargeRequest userPointChargeRequest) {
+        return ResponseEntity.ok(facade.charge(userPointChargeRequest.withId(id)));
     }
 
     /**

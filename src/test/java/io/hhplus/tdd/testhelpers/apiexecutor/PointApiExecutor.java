@@ -3,6 +3,7 @@ package io.hhplus.tdd.testhelpers.apiexecutor;
 import static io.restassured.RestAssured.*;
 import static org.springframework.http.MediaType.*;
 
+import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.util.YmlLoader;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -21,12 +22,12 @@ public class PointApiExecutor extends AbstractRequestExecutor{
 		return given().log().all().port(port).contentType(APPLICATION_JSON_VALUE);
 	}
 
-	public static ExtractableResponse<Response> chargePoint(long id, long amount){
-		return doPatch(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + id + "/charge", amount);
+	public static ExtractableResponse<Response> chargePoint(UserPointChargeRequest userPointChargeRequest){
+		return doPatch(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + userPointChargeRequest.getId() + "/charge", userPointChargeRequest);
 	}
 
-	public static ExtractableResponse<Response> chargePointWithOk(long id, long amount){
-		return doPatchWithOk(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + id + "/charge", amount);
+	public static ExtractableResponse<Response> chargePointWithOk(UserPointChargeRequest userPointChargeRequest){
+		return doPatchWithOk(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + userPointChargeRequest.getId() + "/charge", userPointChargeRequest);
 	}
 
 
