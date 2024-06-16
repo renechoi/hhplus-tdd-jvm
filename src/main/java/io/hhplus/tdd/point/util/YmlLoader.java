@@ -12,7 +12,6 @@ import java.util.Map;
  * @author : Rene Choi
  * @since : 2024/06/16
  */
-
 public class YmlLoader {
 
 	private static YmlLoader instance;

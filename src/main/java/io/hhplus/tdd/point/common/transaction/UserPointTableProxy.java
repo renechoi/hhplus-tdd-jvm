@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
+import io.hhplus.tdd.point.util.UserPointUtil;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author : Rene Choi
+ * @since : 2024/06/16
+ */
 @Component
 @RequiredArgsConstructor
 public class UserPointTableProxy {

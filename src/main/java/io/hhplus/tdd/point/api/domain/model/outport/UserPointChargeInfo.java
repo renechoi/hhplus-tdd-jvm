@@ -2,7 +2,6 @@ package io.hhplus.tdd.point.api.domain.model.outport;
 
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
-import lombok.AllArgsConstructor;
 
 /**
  * @author : Rene Choi
