@@ -54,5 +54,9 @@ public class PointChargeContextHolder {
 	public static UserPointChargeResponse getUserPointChargeResponse(Long id) {
 		return userPointChargeResponseMap.get(String.valueOf(id));
 	}
+
+	public static UserPointChargeResponse getMostRecentUserPointChargeResponse() {
+		return userPointChargeResponseMap.values().stream().reduce((first, second) -> second).orElse(null);
+	}
 }
 

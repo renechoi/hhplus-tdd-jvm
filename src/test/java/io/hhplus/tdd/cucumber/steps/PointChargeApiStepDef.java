@@ -35,8 +35,7 @@ public class PointChargeApiStepDef implements En {
 	}
 
 	private void verifyUserPoints(Long expectedPoints) {
-		Long userId = getUserId();
-		UserPointChargeResponse chargeResponse = getUserPointChargeResponse(userId);
+		UserPointChargeResponse chargeResponse = getMostRecentUserPointChargeResponse();
 		assertEquals(expectedPoints, chargeResponse.point(), "충전 후 포인트가 예상 값과 다릅니다.");
 	}
 }

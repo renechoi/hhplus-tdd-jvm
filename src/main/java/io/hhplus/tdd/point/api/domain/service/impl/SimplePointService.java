@@ -3,6 +3,7 @@ package io.hhplus.tdd.point.api.domain.service.impl;
 import org.springframework.stereotype.Service;
 
 import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import io.hhplus.tdd.point.common.annotation.Transactional;
@@ -23,10 +24,12 @@ public class SimplePointService implements PointService {
 	@Override
 	@Transactional
 	public UserPointChargeInfo charge(long id, long amount) {
+		UserPoint currentUserPoint = userPointTable.selectById(id);
 
-		// todo charge
+		long newPointAmount = currentUserPoint.calculateNewPointWithSummation(amount);
 
+		UserPoint updatedUserPoint = userPointTable.insertOrUpdate(id, newPointAmount);
 
-		return null;
+		return UserPointChargeInfo.from(updatedUserPoint);
 	}
 }
