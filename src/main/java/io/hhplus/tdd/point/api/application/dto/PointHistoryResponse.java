@@ -1,6 +1,5 @@
 package io.hhplus.tdd.point.api.application.dto;
 
-import io.hhplus.tdd.point.api.domain.entity.PointHistory;
 import io.hhplus.tdd.point.api.domain.model.outport.PointHistoryInfo;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
 import io.hhplus.tdd.point.common.model.types.TransactionType;

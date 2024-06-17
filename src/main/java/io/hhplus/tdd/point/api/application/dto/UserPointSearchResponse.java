@@ -1,6 +1,5 @@
 package io.hhplus.tdd.point.api.application.dto;
 
-import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
 

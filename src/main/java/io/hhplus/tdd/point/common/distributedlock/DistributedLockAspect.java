@@ -1,6 +1,5 @@
 package io.hhplus.tdd.point.common.distributedlock;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -60,16 +59,6 @@ public class DistributedLockAspect {
 			context.setVariable(paramNames[i], args[i]);
 		}
 		return parser.parseExpression("#" + key).getValue(context, String.class);
-	}
-
-	private Object getFieldValue(Object object, String fieldName) {
-		try {
-			Field field = object.getClass().getDeclaredField(fieldName);
-			field.setAccessible(true);
-			return field.get(object);
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			throw new IllegalArgumentException("Failed to get field value", e);
-		}
 	}
 }
 

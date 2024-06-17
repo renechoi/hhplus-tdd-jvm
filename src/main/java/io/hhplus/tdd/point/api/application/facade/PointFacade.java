@@ -10,8 +10,6 @@ import io.hhplus.tdd.point.api.application.dto.UserPointUseResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.validators.UserPointChargeValidator;
 import io.hhplus.tdd.point.api.application.validators.UserPointUseValidator;
-import io.hhplus.tdd.point.api.domain.model.outport.PointHistories;
-import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import io.hhplus.tdd.point.common.annotation.DistributedLock;
 import io.hhplus.tdd.point.common.annotation.Facade;

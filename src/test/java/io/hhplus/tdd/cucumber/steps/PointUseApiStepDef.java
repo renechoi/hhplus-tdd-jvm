@@ -1,11 +1,10 @@
 package io.hhplus.tdd.cucumber.steps;
-import static io.hhplus.tdd.cucumber.contextholder.ExceptionContextHolder.*;
+
 import static io.hhplus.tdd.cucumber.contextholder.PointUseContextHolder.*;
 import static io.hhplus.tdd.testhelpers.apiexecutor.PointApiExecutor.*;
 import static io.hhplus.tdd.testhelpers.parser.PointUseResponseParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import io.cucumber.java8.En;
-import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointUseResponse;
+import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;

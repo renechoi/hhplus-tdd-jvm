@@ -7,7 +7,6 @@ import io.hhplus.tdd.point.api.application.specification.MaxPointsSpecificationF
 import io.hhplus.tdd.point.api.application.specification.PositiveAmountSpecification;
 import io.hhplus.tdd.point.api.application.specification.ValidUserIdSpecification;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
-import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import lombok.RequiredArgsConstructor;

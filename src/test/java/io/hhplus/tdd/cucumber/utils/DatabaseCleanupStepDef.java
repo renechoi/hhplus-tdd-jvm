@@ -1,7 +1,6 @@
 package io.hhplus.tdd.cucumber.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import io.cucumber.java8.En;
 

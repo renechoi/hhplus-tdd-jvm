@@ -1,6 +1,5 @@
 package io.hhplus.tdd.point.api.application.dto;
 
-import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointUseCommand;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
 import lombok.AllArgsConstructor;

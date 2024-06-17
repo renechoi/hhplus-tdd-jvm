@@ -1,16 +1,11 @@
 package io.hhplus.tdd.cucumber.steps;
 
-
-import static io.hhplus.tdd.cucumber.contextholder.ExceptionContextHolder.*;
-import static io.hhplus.tdd.cucumber.contextholder.PointChargeContextHolder.*;
 import static io.hhplus.tdd.cucumber.contextholder.PointSearchContextHolder.*;
 import static io.hhplus.tdd.testhelpers.apiexecutor.PointApiExecutor.*;
-import static io.hhplus.tdd.testhelpers.parser.PointChargeResponseParser.*;
 import static io.hhplus.tdd.testhelpers.parser.PointSearchResponseParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.cucumber.java8.En;
-import io.cucumber.junit.platform.engine.Cucumber;
 import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

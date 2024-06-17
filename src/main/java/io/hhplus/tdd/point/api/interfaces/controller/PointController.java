@@ -2,8 +2,6 @@ package io.hhplus.tdd.point.api.interfaces.controller;
 
 import static org.springframework.http.ResponseEntity.*;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,9 +17,6 @@ import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointUseResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.facade.PointFacade;
-import io.hhplus.tdd.point.api.domain.entity.PointHistory;
-import io.hhplus.tdd.point.api.domain.entity.UserPoint;
-import io.hhplus.tdd.point.api.domain.model.outport.PointHistories;
 import lombok.RequiredArgsConstructor;
 
 @RestController
