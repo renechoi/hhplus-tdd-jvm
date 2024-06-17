@@ -2,41 +2,38 @@ package io.hhplus.tdd.point.api.application.validators;
 
 import org.springframework.stereotype.Component;
 
-import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
-import io.hhplus.tdd.point.api.application.specification.MaxPointsSpecificationFactory;
+import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.specification.PositiveAmountSpecification;
 import io.hhplus.tdd.point.api.application.specification.ValidUserIdSpecification;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
-import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import lombok.RequiredArgsConstructor;
 
 /**
  * @author : Rene Choi
- * @since : 2024/06/16
+ * @since : 2024/06/17
  */
 @Component
 @RequiredArgsConstructor
-public class UserPointChargeValidator implements Validator<UserPointChargeRequest> {
+public class UserPointUseValidator implements Validator<UserPointUserRequest> {
 
 	private final PointService pointService;
 	private final ValidUserIdSpecification validUserIdSpecification;
 	private final PositiveAmountSpecification positiveAmountSpecification;
-	private final MaxPointsSpecificationFactory maxPointsSpecificationFactory;
 
 	@Override
-	public void validate(UserPointChargeRequest request) {
-		UserPointInfo pointInfo = pointService.search(UserPointSearchCommand.searchCommandById(request));
+	public void validate(UserPointUserRequest request) {
+		UserPointInfo pointInfo = pointService.search(UserPointSearchCommand.searchCommandById(request.getId()));
 
 		if (!validUserIdSpecification.isSatisfiedBy(request)) {
 			throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다");
 		}
 		if (!positiveAmountSpecification.isSatisfiedBy(request)) {
-			throw new IllegalArgumentException("충전 금액은 양수여야 합니다");
+			throw new IllegalArgumentException("사용 금액은 양수여야 합니다");
 		}
-		if (!maxPointsSpecificationFactory.specify(pointInfo.point()).isSatisfiedBy(request)) {
-			throw new IllegalArgumentException("최대 허용 포인트를 초과합니다");
+		if (request.getAmount() > pointInfo.point()) {
+			throw new IllegalArgumentException("사용하려는 포인트가 현재 포인트보다 많습니다");
 		}
 	}
 }

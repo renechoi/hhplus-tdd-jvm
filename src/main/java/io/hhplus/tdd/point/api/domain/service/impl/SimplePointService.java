@@ -6,7 +6,10 @@ import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
+import io.hhplus.tdd.point.api.domain.model.inport.UserPointUseCommand;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
+import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
+import io.hhplus.tdd.point.api.domain.model.outport.UserPointUseInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import io.hhplus.tdd.point.common.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +37,18 @@ public class SimplePointService implements PointService {
 	}
 
 	@Override
-	public UserPointChargeInfo search(UserPointSearchCommand searchCommand) {
-		return UserPointChargeInfo.from(userPointTable.selectById(searchCommand.id()));
+	public UserPointInfo search(UserPointSearchCommand searchCommand) {
+		return UserPointInfo.from(userPointTable.selectById(searchCommand.id()));
+	}
+
+	@Override
+	@Transactional
+	public UserPointUseInfo use(UserPointUseCommand command) {
+		// 현재 포인트 조회
+		UserPoint currentUserPoint = userPointTable.selectById(command.id());
+
+		// 포인트 차감 후 업데이트
+		UserPoint updatedUserPoint = currentUserPoint.deductPoints(command.amount());
+		return UserPointUseInfo.from(userPointTable.insertOrUpdate(updatedUserPoint.id(), updatedUserPoint.point()));
 	}
 }

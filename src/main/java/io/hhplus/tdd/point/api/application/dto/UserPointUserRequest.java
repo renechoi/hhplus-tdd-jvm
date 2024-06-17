@@ -1,26 +1,28 @@
 package io.hhplus.tdd.point.api.application.dto;
 
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
+import io.hhplus.tdd.point.api.domain.model.inport.UserPointUseCommand;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author : Rene Choi
- * @since : 2024/06/16
+ * @since : 2024/06/17
  */
 @Data
 @AllArgsConstructor
-public class UserPointChargeRequest implements UserPointRequest {
+public class UserPointUserRequest implements UserPointRequest{
+
 	private long id;
 	private long amount;
 
-	public UserPointChargeRequest withId(long id) {
+	public UserPointUserRequest withId(long id) {
 		this.id = id;
 		return this;
 	}
 
-	public UserPointChargeCommand toCommand() {
-		return ObjectMapperBasedVoMapper.convert(this, UserPointChargeCommand.class);
+	public UserPointUseCommand toCommand() {
+		return ObjectMapperBasedVoMapper.convert(this, UserPointUseCommand.class);
 	}
 }

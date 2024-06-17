@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point.api.application.dto;
 
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
+import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.common.mapper.ObjectMapperBasedVoMapper;
 
 /**
@@ -12,7 +13,7 @@ public record UserPointSearchResponse(
 	long point,
 	long updateMillis
 ) {
-	public static UserPointSearchResponse from(UserPointChargeInfo info) {
+	public static UserPointSearchResponse from(UserPointInfo info) {
 		return ObjectMapperBasedVoMapper.convert(info, UserPointSearchResponse.class);
 	}
 }

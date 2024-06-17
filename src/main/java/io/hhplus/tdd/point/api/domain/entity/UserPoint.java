@@ -13,4 +13,11 @@ public record UserPoint(
     public long calculateNewPointWithSummation(long addingAmount) {
         return this.point+addingAmount;
     }
+
+    public UserPoint deductPoints(long amount) {
+        if (amount > this.point) {
+            throw new IllegalArgumentException("잔액이 충분하지 않습니다.");
+        }
+        return new UserPoint(this.id, this.point - amount, System.currentTimeMillis());
+    }
 }

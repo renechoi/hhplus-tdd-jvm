@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
+import io.hhplus.tdd.point.api.application.dto.UserPointUseResponse;
+import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.facade.PointFacade;
 import io.hhplus.tdd.point.api.domain.entity.PointHistory;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
@@ -58,10 +60,7 @@ public class PointController {
      * 특정 유저의 포인트를 사용하는 기능을 작성 예정
      */
     @PatchMapping("{id}/use")
-    public UserPoint use(
-            @PathVariable long id,
-            @RequestBody long amount
-    ) {
-        return new UserPoint(0, 0, 0);
+    public ResponseEntity<UserPointUseResponse> use(@PathVariable long id, @RequestBody UserPointUserRequest userPointUserRequest) {
+        return ok(facade.use(userPointUserRequest.withId(id)));
     }
 }
