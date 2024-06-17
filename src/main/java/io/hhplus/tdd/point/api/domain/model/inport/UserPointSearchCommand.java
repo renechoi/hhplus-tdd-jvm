@@ -15,4 +15,8 @@ public record UserPointSearchCommand(
 	public static UserPointSearchCommand searchCommandById(UserPointChargeRequest request) {
 		return UserPointSearchCommand.builder().id(request.getId()).build();
 	}
+
+	public static UserPointSearchCommand searchCommandById(long id) {
+		return UserPointSearchCommand.builder().id(id).build();
+	}
 }

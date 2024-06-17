@@ -1,5 +1,7 @@
 package io.hhplus.tdd.point.api.interfaces.controller;
 
+import static org.springframework.http.ResponseEntity.*;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeResponse;
+import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
 import io.hhplus.tdd.point.api.application.facade.PointFacade;
 import io.hhplus.tdd.point.api.domain.entity.PointHistory;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
@@ -26,13 +29,11 @@ public class PointController {
 
 
     /**
-     * 특정 유저의 포인트를 조회하는 기능을 작성 예정
+     * 특정 유저의 포인트를 조회하는 기능
      */
     @GetMapping("{id}")
-    public UserPoint point(
-            @PathVariable long id
-    ) {
-        return new UserPoint(0, 0, 0);
+    public ResponseEntity<UserPointSearchResponse> point(@PathVariable long id) {
+        return ok(facade.search(id));
     }
 
     /**
@@ -46,11 +47,11 @@ public class PointController {
     }
 
     /**
-     * 특정 유저의 포인트를 충전하는 기능을 작성
+     * 특정 유저의 포인트를 충전하는 기능
      */
     @PatchMapping("{id}/charge")
     public ResponseEntity<UserPointChargeResponse> charge(@PathVariable long id, @RequestBody UserPointChargeRequest userPointChargeRequest) {
-        return ResponseEntity.ok(facade.charge(userPointChargeRequest.withId(id)));
+        return ok(facade.charge(userPointChargeRequest.withId(id)));
     }
 
     /**

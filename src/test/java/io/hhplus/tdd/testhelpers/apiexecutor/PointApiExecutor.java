@@ -31,4 +31,13 @@ public class PointApiExecutor extends AbstractRequestExecutor{
 	}
 
 
+	public static ExtractableResponse<Response> searchPoint(Long id) {
+		return doGet(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + id);
+	}
+
+	public static ExtractableResponse<Response> searchPointWithOk(Long id) {
+		return doGetWithOk(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + id);
+	}
+
+
 }

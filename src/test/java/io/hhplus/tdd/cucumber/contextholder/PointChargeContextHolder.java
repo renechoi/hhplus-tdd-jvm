@@ -15,12 +15,14 @@ public class PointChargeContextHolder {
 	private static final AtomicReference<Long> userId = new AtomicReference<>();
 	private static final AtomicReference<Long> currentPoints = new AtomicReference<>();
 	private static final AtomicReference<Long> chargeAmount = new AtomicReference<>();
+	private static final AtomicReference<Long> mostRecentUserId = new AtomicReference<>();
 
 	public static void initFields() {
 		userPointChargeResponseMap.clear();
 		userId.set(null);
 		currentPoints.set(null);
 		chargeAmount.set(null);
+		mostRecentUserId.set(null);
 	}
 
 	public static void setUserId(Long id) {
@@ -49,6 +51,7 @@ public class PointChargeContextHolder {
 
 	public static void putUserPointChargeResponse(Long id, UserPointChargeResponse response) {
 		userPointChargeResponseMap.put(String.valueOf(id), response);
+		mostRecentUserId.set(id);
 	}
 
 	public static UserPointChargeResponse getUserPointChargeResponse(Long id) {
@@ -56,7 +59,7 @@ public class PointChargeContextHolder {
 	}
 
 	public static UserPointChargeResponse getMostRecentUserPointChargeResponse() {
-		return userPointChargeResponseMap.values().stream().reduce((first, second) -> second).orElse(null);
+		Long recentUserId = mostRecentUserId.get();
+		return recentUserId != null ? getUserPointChargeResponse(recentUserId) : null;
 	}
 }
-
