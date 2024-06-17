@@ -29,10 +29,10 @@ public class UserPointChargeValidator implements Validator<UserPointChargeReques
 	public void validate(UserPointChargeRequest request) {
 		UserPointInfo pointInfo = pointService.search(UserPointSearchCommand.searchCommandById(request));
 
-		if (!validUserIdSpecification.isSatisfiedBy(request)) {
+		if (validUserIdSpecification.isNotSatisfiedBy(request)) {
 			throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다");
 		}
-		if (!positiveAmountSpecification.isSatisfiedBy(request)) {
+		if (positiveAmountSpecification.isNotSatisfiedBy(request)) {
 			throw new IllegalArgumentException("충전 금액은 양수여야 합니다");
 		}
 		if (!maxPointsSpecificationFactory.specify(pointInfo.point()).isSatisfiedBy(request)) {

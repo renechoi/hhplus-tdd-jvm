@@ -8,4 +8,9 @@ import io.hhplus.tdd.point.api.application.dto.UserPointRequest;
  */
 public interface Specification<T extends UserPointRequest> {
 	boolean isSatisfiedBy(T t);
+
+
+	default boolean isNotSatisfiedBy(T t) {
+		return !isSatisfiedBy(t);
+	}
 }

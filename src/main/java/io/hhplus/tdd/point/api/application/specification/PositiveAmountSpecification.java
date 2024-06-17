@@ -2,7 +2,6 @@ package io.hhplus.tdd.point.api.application.specification;
 
 import org.springframework.stereotype.Component;
 
-import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointRequest;
 
 /**
@@ -16,4 +15,5 @@ public class PositiveAmountSpecification implements Specification<UserPointReque
 	public boolean isSatisfiedBy(UserPointRequest request) {
 		return request.getAmount() > 0;
 	}
+
 }
