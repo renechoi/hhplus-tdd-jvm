@@ -2,6 +2,7 @@ package io.hhplus.tdd.point.api.application.facade;
 
 import static io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand.*;
 
+import io.hhplus.tdd.point.api.application.dto.PointHistoriesResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
@@ -9,6 +10,7 @@ import io.hhplus.tdd.point.api.application.dto.UserPointUseResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.validators.UserPointChargeValidator;
 import io.hhplus.tdd.point.api.application.validators.UserPointUseValidator;
+import io.hhplus.tdd.point.api.domain.model.outport.PointHistories;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import io.hhplus.tdd.point.common.annotation.DistributedLock;
@@ -41,5 +43,9 @@ public class PointFacade {
 	public UserPointUseResponse use(UserPointUserRequest userPointUserRequest) {
 		useValidator.validate(userPointUserRequest);
 		return UserPointUseResponse.from(pointService.use(userPointUserRequest.toCommand()));
+	}
+
+	public PointHistoriesResponse getHistories(long userId) {
+		return PointHistoriesResponse.from(pointService.getHistories(userId));
 	}
 }

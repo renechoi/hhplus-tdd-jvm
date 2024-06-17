@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.hhplus.tdd.point.api.application.dto.PointHistoriesResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeRequest;
 import io.hhplus.tdd.point.api.application.dto.UserPointChargeResponse;
 import io.hhplus.tdd.point.api.application.dto.UserPointSearchResponse;
@@ -20,6 +21,7 @@ import io.hhplus.tdd.point.api.application.dto.UserPointUserRequest;
 import io.hhplus.tdd.point.api.application.facade.PointFacade;
 import io.hhplus.tdd.point.api.domain.entity.PointHistory;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
+import io.hhplus.tdd.point.api.domain.model.outport.PointHistories;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -42,10 +44,8 @@ public class PointController {
      * 특정 유저의 포인트 충전/이용 내역을 조회하는 기능을 작성 예장
      */
     @GetMapping("{id}/histories")
-    public List<PointHistory> history(
-            @PathVariable long id
-    ) {
-        return List.of();
+    public ResponseEntity<PointHistoriesResponse> history(@PathVariable long id) {
+        return ok(facade.getHistories(id));
     }
 
     /**

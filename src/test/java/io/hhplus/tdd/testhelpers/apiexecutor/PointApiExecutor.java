@@ -50,4 +50,13 @@ public class PointApiExecutor extends AbstractRequestExecutor{
 	}
 
 
+	public static ExtractableResponse<Response> getHistories(Long userId) {
+		return doGet(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + userId + "/histories");
+	}
+
+	public static ExtractableResponse<Response> getHistoriesWithOk(Long userId) {
+		return doGetWithOk(getRequestSpecification(DynamicPortHolder.getPort()), URL_PATH + "/" + userId + "/histories");
+	}
+
+
 }

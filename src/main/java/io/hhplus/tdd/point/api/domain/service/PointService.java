@@ -1,5 +1,6 @@
 package io.hhplus.tdd.point.api.domain.service;
 
+import io.hhplus.tdd.point.api.domain.model.outport.PointHistories;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointUseCommand;
@@ -15,4 +16,5 @@ public interface PointService {
 	UserPointChargeInfo charge(UserPointChargeCommand userPointChargeCommand);
 	UserPointInfo search(UserPointSearchCommand userPointSearchCommand);
 	UserPointUseInfo use(UserPointUseCommand command);
+	PointHistories getHistories(long userId);
 }
