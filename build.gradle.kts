@@ -48,7 +48,8 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-commons:1.10.0")
     testImplementation("org.junit.platform:junit-platform-engine:1.10.0")
 
-
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
 
     testImplementation(libs.spring.boot.starter.test)
 }
