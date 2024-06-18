@@ -1,19 +1,37 @@
 package io.hhplus.tdd.point.api.domain.service.impl;
 
+import static io.hhplus.tdd.point.common.model.types.TransactionType.*;
+import static java.lang.System.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 
+import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
+import io.hhplus.tdd.point.common.model.types.TransactionType;
+import io.hhplus.tdd.point.common.transaction.TransactionAspect;
 import io.hhplus.tdd.point.common.transaction.UserPointTableProxy;
 
+/**
+ * @author : Rene Choi
+ * @since : 2024/06/17
+ */
 @SpringBootTest
 @DisplayName("SimplePointService 트랜잭션 통합 테스트")
 public class SimplePointServiceTransactionTest {
@@ -22,16 +40,16 @@ public class SimplePointServiceTransactionTest {
 	private SimplePointService simplePointService;
 
 	@Autowired
-	private UserPointTableProxy userPointTableProxy;
-
-	@Autowired
 	private UserPointTable userPointTable;
 
-	@BeforeEach
-	public void setUp() {
-		// Given: 초기 데이터 설정
-		userPointTable.insertOrUpdate(1L, 100L);
+	@MockBean
+	private PointHistoryTable pointHistoryTable;
+
+	@AfterEach
+	void databaseClear(){
+		userPointTable.insertOrUpdate(1L,0L);
 	}
+
 
 	/**
 	 * 유저 포인트 충전 시 트랜잭션이 성공적으로 커밋되는지 테스트합니다.
@@ -40,6 +58,9 @@ public class SimplePointServiceTransactionTest {
 	@Test
 	@DisplayName("성공적인 트랜잭션 테스트")
 	public void testSuccessfulTransaction() {
+		// Given: 초기 데이터 설정
+		userPointTable.insertOrUpdate(1L, 100L);
+
 		// When: 유저 포인트를 충전
 		UserPointChargeCommand command = new UserPointChargeCommand(1L, 50L);
 		UserPointChargeInfo chargeInfo = simplePointService.charge(command);
@@ -59,6 +80,24 @@ public class SimplePointServiceTransactionTest {
 	@Test
 	@DisplayName("트랜잭션 롤백 테스트")
 	public void testRollbackTransaction() {
-		// todo ->
+		// Given: 초기 데이터 설정
+		UserPointChargeCommand command = new UserPointChargeCommand(1L, 100L);
+		simplePointService.charge(command);
+
+		// When: PointHistoryTable의 insert 메서드가 예외를 던지도록 설정
+		doThrow(new RuntimeException("Test Exception"))
+			.when(pointHistoryTable)
+			.insert(eq(1L), eq(50L), eq(TransactionType.CHARGE), anyLong());
+
+
+		// When: 유저 포인트를 충전 시도
+		command = new UserPointChargeCommand(1L, 50L);
+		try {
+			simplePointService.charge(command);
+		} catch (RuntimeException ignored) {}
+
+		// Then: 트랜잭션이 롤백되었는지 확인
+		UserPoint userPoint = userPointTable.selectById(1L);
+		assertThat(userPoint.point()).isEqualTo(100L);
 	}
 }
