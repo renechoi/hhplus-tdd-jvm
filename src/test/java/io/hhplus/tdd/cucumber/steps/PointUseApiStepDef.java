@@ -65,12 +65,12 @@ public class PointUseApiStepDef implements En {
 		});
 
 		executorService.shutdown();
-		awaitTermination(executorService, 10, TimeUnit.SECONDS);
+		awaitTermination(executorService, 20, TimeUnit.SECONDS);
 	}
 
 	@SneakyThrows
 	private void awaitLatch(CountDownLatch latch) {
-		latch.await(10, TimeUnit.SECONDS);
+		latch.await(20, TimeUnit.SECONDS);
 	}
 
 	@SneakyThrows

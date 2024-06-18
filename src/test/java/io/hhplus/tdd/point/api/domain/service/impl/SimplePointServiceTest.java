@@ -13,8 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.api.infrastructure.database.PointHistoryTable;
+import io.hhplus.tdd.point.api.infrastructure.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;

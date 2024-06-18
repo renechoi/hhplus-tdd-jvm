@@ -7,7 +7,7 @@ import java.util.stream.LongStream;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.api.infrastructure.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import lombok.RequiredArgsConstructor;
 

@@ -1,32 +1,21 @@
 package io.hhplus.tdd.point.api.domain.service.impl;
 
-import static io.hhplus.tdd.point.common.model.types.TransactionType.*;
-import static java.lang.System.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.api.infrastructure.database.PointHistoryTable;
+import io.hhplus.tdd.point.api.infrastructure.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.common.model.types.TransactionType;
-import io.hhplus.tdd.point.common.transaction.TransactionAspect;
-import io.hhplus.tdd.point.common.transaction.UserPointTableProxy;
 
 /**
  * @author : Rene Choi
