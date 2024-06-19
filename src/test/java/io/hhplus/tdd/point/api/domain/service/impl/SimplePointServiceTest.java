@@ -13,8 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.hhplus.tdd.point.api.infrastructure.database.PointHistoryTable;
-import io.hhplus.tdd.point.api.infrastructure.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointChargeCommand;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
@@ -22,6 +20,8 @@ import io.hhplus.tdd.point.api.domain.model.inport.UserPointUseCommand;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointUseInfo;
+import io.hhplus.tdd.point.api.infrastructure.persistence.impl.SimplePointHistoryRepository;
+import io.hhplus.tdd.point.api.infrastructure.persistence.impl.SimpleUserPointRepository;
 import io.hhplus.tdd.point.common.model.types.TransactionType;
 
 /**
@@ -32,10 +32,10 @@ import io.hhplus.tdd.point.common.model.types.TransactionType;
 public class SimplePointServiceTest {
 
 	@Mock
-	private UserPointTable userPointTable;
+	private SimpleUserPointRepository userPointRepository;
 
 	@Mock
-	private PointHistoryTable pointHistoryTable;
+	private SimplePointHistoryRepository pointHistoryRepository;
 
 	@InjectMocks
 	private SimplePointService simplePointService;
@@ -53,8 +53,8 @@ public class SimplePointServiceTest {
 	void testCharge() {
 		// given
 		UserPointChargeCommand chargeCommand = new UserPointChargeCommand(1L, 500L);
-		when(userPointTable.selectById(1L)).thenReturn(userPoint);
-		when(userPointTable.insertOrUpdate(eq(1L), anyLong())).thenReturn(new UserPoint(1L, 1000L, System.currentTimeMillis()));
+		when(userPointRepository.selectById(1L)).thenReturn(userPoint);
+		when(userPointRepository.insertOrUpdate(eq(1L), anyLong())).thenReturn(new UserPoint(1L, 1000L, System.currentTimeMillis()));
 
 		// when
 		UserPointChargeInfo chargeInfo = simplePointService.charge(chargeCommand);
@@ -63,7 +63,7 @@ public class SimplePointServiceTest {
 		assertEquals(1000L, chargeInfo.point(), "충전된 포인트가 잘못되었습니다.");
 
 		ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
-		verify(pointHistoryTable, times(1)).insert(eq(1L), eq(500L), eq(TransactionType.CHARGE), captor.capture());
+		verify(pointHistoryRepository, times(1)).insert(eq(1L), eq(500L), eq(TransactionType.CHARGE), captor.capture());
 
 		Long capturedMillis = captor.getValue();
 		assertNotNull(capturedMillis, "캡처된 시간 값이 null입니다.");
@@ -75,7 +75,7 @@ public class SimplePointServiceTest {
 	void testSearch() {
 		// given
 		UserPointSearchCommand searchCommand = new UserPointSearchCommand(1L, 300L);
-		when(userPointTable.selectById(1L)).thenReturn(userPoint);
+		when(userPointRepository.selectById(1L)).thenReturn(userPoint);
 
 		// when
 		UserPointInfo pointInfo = simplePointService.search(searchCommand);
@@ -89,8 +89,8 @@ public class SimplePointServiceTest {
 	void testUse() {
 		// given
 		UserPointUseCommand useCommand = new UserPointUseCommand(1L, 300L);
-		when(userPointTable.selectById(1L)).thenReturn(userPoint);
-		when(userPointTable.insertOrUpdate(eq(1L), anyLong())).thenReturn(new UserPoint(1L, 200L, System.currentTimeMillis()));
+		when(userPointRepository.selectById(1L)).thenReturn(userPoint);
+		when(userPointRepository.insertOrUpdate(eq(1L), anyLong())).thenReturn(new UserPoint(1L, 200L, System.currentTimeMillis()));
 
 		// when
 		UserPointUseInfo useInfo = simplePointService.use(useCommand);
@@ -99,7 +99,7 @@ public class SimplePointServiceTest {
 		assertEquals(200L, useInfo.point(), "사용된 후 남은 포인트가 잘못되었습니다.");
 
 		ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
-		verify(pointHistoryTable, times(1)).insert(eq(1L), eq(300L), eq(TransactionType.USE), captor.capture());
+		verify(pointHistoryRepository, times(1)).insert(eq(1L), eq(300L), eq(TransactionType.USE), captor.capture());
 
 		Long capturedMillis = captor.getValue();
 		assertNotNull(capturedMillis, "캡처된 시간 값이 null입니다.");
@@ -111,7 +111,7 @@ public class SimplePointServiceTest {
 	void testUse_InsufficientBalance() {
 		// given
 		UserPointUseCommand useCommand = new UserPointUseCommand(1L, 600L);
-		when(userPointTable.selectById(1L)).thenReturn(userPoint);
+		when(userPointRepository.selectById(1L)).thenReturn(userPoint);
 
 		// when & then
 		assertThrows(IllegalArgumentException.class, () -> simplePointService.use(useCommand), "잔액 부족 예외가 발생하지 않았습니다.");

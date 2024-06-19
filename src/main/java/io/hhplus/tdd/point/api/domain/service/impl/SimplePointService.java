@@ -16,6 +16,8 @@ import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.api.domain.model.outport.UserPointUseInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
+import io.hhplus.tdd.point.api.infrastructure.persistence.PointHistoryRepository;
+import io.hhplus.tdd.point.api.infrastructure.persistence.UserPointRepository;
 import io.hhplus.tdd.point.common.annotation.Transactional;
 import io.hhplus.tdd.point.common.model.types.TransactionType;
 import lombok.RequiredArgsConstructor;
@@ -28,39 +30,38 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SimplePointService implements PointService {
 
-	private final UserPointTable userPointTable;
-
-	private final PointHistoryTable pointHistoryTable;
+	private final UserPointRepository userPointRepository;
+	private final PointHistoryRepository pointHistoryRepository;
 
 	@Override
 	@Transactional
 	public UserPointChargeInfo charge(UserPointChargeCommand chargeCommand) {
-		UserPoint currentUserPoint = userPointTable.selectById(chargeCommand.id());
-		UserPoint updatedUserPoint = userPointTable.insertOrUpdate(chargeCommand.id(), currentUserPoint.calculateNewPointWithSummation(chargeCommand.amount()));
+		UserPoint currentUserPoint = userPointRepository.selectById(chargeCommand.id());
+		UserPoint updatedUserPoint = userPointRepository.insertOrUpdate(chargeCommand.id(), currentUserPoint.calculateNewPointWithSummation(chargeCommand.amount()));
 
-		pointHistoryTable.insert(chargeCommand.id(), chargeCommand.amount(), CHARGE, currentTimeMillis());
+		pointHistoryRepository.insert(chargeCommand.id(), chargeCommand.amount(), CHARGE, currentTimeMillis());
 
 		return UserPointChargeInfo.from(updatedUserPoint);
 	}
 
 	@Override
 	public UserPointInfo search(UserPointSearchCommand searchCommand) {
-		return UserPointInfo.from(userPointTable.selectById(searchCommand.id()));
+		return UserPointInfo.from(userPointRepository.selectById(searchCommand.id()));
 	}
 
 	@Override
 	@Transactional
 	public UserPointUseInfo use(UserPointUseCommand command) {
-		UserPoint updatedUserPoint = userPointTable.selectById(command.id()).deductPoints(command.amount());
-		UserPoint afterUseUserPoint = userPointTable.insertOrUpdate(updatedUserPoint.id(), updatedUserPoint.point());
+		UserPoint updatedUserPoint = userPointRepository.selectById(command.id()).deductPoints(command.amount());
+		UserPoint afterUseUserPoint = userPointRepository.insertOrUpdate(updatedUserPoint.id(), updatedUserPoint.point());
 
-		pointHistoryTable.insert(command.id(), command.amount(), TransactionType.USE, System.currentTimeMillis());
+		pointHistoryRepository.insert(command.id(), command.amount(), TransactionType.USE, System.currentTimeMillis());
 
 		return UserPointUseInfo.from(afterUseUserPoint);
 	}
 
 	@Override
 	public PointHistories getHistories(long userId) {
-		return PointHistories.from(pointHistoryTable.selectAllByUserId(userId));
+		return PointHistories.from(pointHistoryRepository.selectAllByUserId(userId));
 	}
 }
