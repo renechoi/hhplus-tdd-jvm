@@ -1,0 +1,16 @@
+spring:
+  application.name: hhplus-tdd
+
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 12
+        queue-capacity: 100
+
+logging:
+  level:
+    com.zaxxer: DEBUG
+    org.apache.http: DEBUG
+
+
