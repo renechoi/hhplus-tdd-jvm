@@ -26,6 +26,31 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     annotationProcessor(libs.spring.boot.configuration.processor)
+
+
+
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.aspectj:aspectjrt:1.9.7")
+    implementation("org.aspectj:aspectjweaver:1.9.7")
+
+
+    testImplementation("io.rest-assured:rest-assured:5.3.2")
+    testImplementation("io.rest-assured:json-path:5.3.2")
+    testImplementation("io.rest-assured:xml-path:5.3.2")
+
+    // Cucumber dependencies
+    testImplementation("io.cucumber:cucumber-java:7.14.0")
+    testImplementation("io.cucumber:cucumber-java8:7.14.0")
+    testImplementation("io.cucumber:cucumber-spring:7.14.0")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.0")
+    testImplementation("org.junit.platform:junit-platform-suite:1.10.0")
+    testImplementation("org.junit.platform:junit-platform-suite-api:1.10.0")
+    testImplementation("org.junit.platform:junit-platform-commons:1.10.0")
+    testImplementation("org.junit.platform:junit-platform-engine:1.10.0")
+
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+
     testImplementation(libs.spring.boot.starter.test)
 }
 
