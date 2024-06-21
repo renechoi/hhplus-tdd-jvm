@@ -1,4 +1,4 @@
-package io.hhplus.tdd.database;
+package io.hhplus.tdd.point.api.infrastructure.database;
 
 import java.util.ArrayList;
 import java.util.List;

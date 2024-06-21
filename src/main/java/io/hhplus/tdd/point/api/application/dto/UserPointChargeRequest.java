@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class UserPointChargeRequest {
+public class UserPointChargeRequest implements UserPointRequest {
 	private long id;
 	private long amount;
 

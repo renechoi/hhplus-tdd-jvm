@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 
-import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.point.api.infrastructure.database.UserPointTable;
 import io.hhplus.tdd.point.api.domain.entity.UserPoint;
 import io.hhplus.tdd.point.util.UserPointUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,10 @@ public class UserPointTableProxy {
 	private final UserPointTable userPointTable;
 
 	private final Set<Long> userIds = ConcurrentHashMap.newKeySet(); // 모든 사용자 ID를 추적하기 위한 Set
+
+	public void addUserId(Long id) {
+		userIds.add(id);
+	}
 
 	public UserPoint selectById(Long id) {
 		userIds.add(id); // 사용자 조회 시 ID를 추적
@@ -45,19 +49,16 @@ public class UserPointTableProxy {
 	}
 
 	public void rollbackTransaction() {
-		Map<Long, UserPoint> currentState = new HashMap<>();
-		for (Long id : userIds) {
-			UserPoint userPoint = userPointTable.selectById(id);
-			currentState.put(id, UserPointUtil.copy(userPoint));
-		}
-		transactionContext.rollback(currentState);
-		for (Map.Entry<Long, UserPoint> entry : currentState.entrySet()) {
+		Map<Long, UserPoint> previousState = transactionContext.getPreviousState();
+		for (Map.Entry<Long, UserPoint> entry : previousState.entrySet()) {
 			userPointTable.insertOrUpdate(entry.getKey(), entry.getValue().point());
 		}
+		transactionContext.rollback(previousState); // 상태 복원 후 previousState 클리어
 	}
 
 	public void commitTransaction() {
 		transactionContext.commit();
 	}
-}
 
+
+}

@@ -7,7 +7,7 @@ import io.hhplus.tdd.point.api.application.specification.MaxPointsSpecificationF
 import io.hhplus.tdd.point.api.application.specification.PositiveAmountSpecification;
 import io.hhplus.tdd.point.api.application.specification.ValidUserIdSpecification;
 import io.hhplus.tdd.point.api.domain.model.inport.UserPointSearchCommand;
-import io.hhplus.tdd.point.api.domain.model.outport.UserPointChargeInfo;
+import io.hhplus.tdd.point.api.domain.model.outport.UserPointInfo;
 import io.hhplus.tdd.point.api.domain.service.PointService;
 import lombok.RequiredArgsConstructor;
 
@@ -26,12 +26,12 @@ public class UserPointChargeValidator implements Validator<UserPointChargeReques
 
 	@Override
 	public void validate(UserPointChargeRequest request) {
-		UserPointChargeInfo pointInfo = pointService.search(UserPointSearchCommand.searchCommandById(request));
+		UserPointInfo pointInfo = pointService.search(UserPointSearchCommand.searchCommandById(request));
 
-		if (!validUserIdSpecification.isSatisfiedBy(request)) {
+		if (validUserIdSpecification.isNotSatisfiedBy(request)) {
 			throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다");
 		}
-		if (!positiveAmountSpecification.isSatisfiedBy(request)) {
+		if (positiveAmountSpecification.isNotSatisfiedBy(request)) {
 			throw new IllegalArgumentException("충전 금액은 양수여야 합니다");
 		}
 		if (!maxPointsSpecificationFactory.specify(pointInfo.point()).isSatisfiedBy(request)) {
