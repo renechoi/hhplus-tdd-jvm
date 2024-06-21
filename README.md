@@ -373,3 +373,134 @@ public class PointFacade {
 
 
 
+
+
+## synchronized가 성능에 좋지 않은 이유
+
+
+### 첫 번째 이유
+
+
+##### 경쟁조건? 동시성?의 개념을 다시 생각해보자.
+
+경쟁 조건(race condition)이란
+
+> 여러 개의 프로세스나 스레드가 동시에 공유 자원에 접근하여 자원을 처리하면서 발생하는 조건이다.
+
+동시성 이슈는 이러한 경쟁 조건에서 발생한다.
+
+여기서 주목할 문제의 핵심은 '동시에'와 `공유 자원`이다. 즉, `동시에`와 `공유 자원`을 제어하는 것이 동시성 제어의 핵섬이다.
+
+`synchronized` 키워드를 통한 해결은 어떤 접근 방식일까? `동시에`에 대한 문제를 해결하려는 접근이다. 왜 그럴까?
+
+`synchronized` 키워드는 여러 스레드가 동시에 접근하려는 임계 영역(critical section)을 보호하기 위해 사용되기 때문이다. 즉, 동시 접근을 제어하여 하나의 스레드만이 임계 영역에 들어갈 수 있도록 한다.
+
+이러한 점에서 `synchronized`는 일종의 테이블 락(`table lock`)과 같이 자원 자체를 전체적으로 락킹하는 것과 유사하다고 할 수 있다.
+
+
+##### 예를 들어, 두 사용자가 동시에 포인트를 충전하는 경우를 생각해보자. 
+
+사용자 1과 사용자 2는 동시에 접근하더라도 문제가 되지 않을 수 있지만, synchronized는 행위 자체를 블록시키므로, 불필요한 락까지 전부 블록시키는 방식이 된다. 
+
+
+```java
+public class PointService {
+    public synchronized void charge(Long userId, Long amount) {
+        userPoints.merge(userId, amount, Long::sum);
+    }
+}
+```
+
+```java
+public void simulateConcurrentCharges()  {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        Runnable task1 = () -> pointService.charge(1L, 100L);
+        Runnable task2 = () -> pointService.charge(2L, 200L);
+
+        executor.submit(task1);
+        executor.submit(task2);
+        // ... 
+    }
+```
+
+위 코드에서 동일한 유저에 대한 요청이라면 synchronized 블록은 적절하게 작동하여 동시성 문제를 방지한다. 하지만 유저가 다르다면 굳이 해당 메서드를 블록할 필요가 없다.
+
+이것이 synchronized가 성능에 좋지 않은 첫 번째 이유이다. 동시 접근을 방지하기 위해 불필요하게 모든 접근을 차단하여 성능 저하를 초래한다.
+
+
+
+
+### 두 번째 이유
+
+`synchronized`는 자바의 모니터를 이용하여 락을 획득한다. 모니터 락은 클래스 수준에서 제공되기 때문에, 하나의 클래스에서 여러 개의 다른 `synchronized` 메서드나 블록이 있을 경우, 한 메서드에서 락을 획득하면 다른 메서드나 블록에서도 해당 락이 영향을 받는다.
+
+즉, 한 스레드가 특정 메서드에서 `synchronized`를 사용하여 락을 획득하면, 다른 스레드가 같은 객체의 다른 `synchronized` 메서드를 호출할 때도 락이 걸린다. 
+
+예를 들어 다음과 같은 코드를 살펴보자. 
+
+```java
+public class Counter {
+    private int count = 0;
+
+    // synchronized 메서드
+    public synchronized void increment() {
+        System.out.println("increment() called");
+        count++;
+        try {
+            // 임의의 지연 시간 추가
+            System.out.println("increment() waiting");
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    // synchronized 메서드
+    public synchronized int getCount() {
+        return count;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // 스레드 T1: increment 메서드 호출
+        Thread t1 = new Thread(counter::increment);
+
+        // 스레드 T2: getCount 메서드 호출
+        Thread t2 = new Thread(() -> {
+            System.out.println("Count: " + counter.getCount());
+        });
+
+        t1.start();
+        Thread.sleep(200);  // T1이 먼저 실행되도록 약간의 지연 추가
+        t2.start();
+
+        t1.join();
+        t2.join();
+    }
+}
+```
+
+이 코드에서 스레드 T1이 `increment` 메서드를 호출하여 모니터 락을 획득하면, 스레드 T2는 `getCount` 메서드를 호출할 때까지 대기해야 한다. 
+
+![synchronized-waiting.png](docs%2Fsynchronized-waiting.png)
+
+바로 이런 상황이다. 
+
+이는 두 메서드가 서로 다른 기능을 수행함에도 불구하고 하나의 락으로 인해 동시에 실행되지 못하는 상황을 초래한다.
+
+![synchronized_sqeuence.png](docs%2Fsynchronized_sqeuence.png)
+
+이것이 `synchronized`가 성능에 좋지 않은 두 번째 이유이다. 
+
+모니터 락이 클래스 수준에서 동작하여 불필요한 대기를 초래하고 성능 저하를 유발한다.
+
+
+### 결론
+
+결론적으로, `synchronized` 키워드는 동시성 문제를 해결하는 데 확실하고 간편한 방법이다. 하지만 불필요한 대기와 성능 저하를 초래할 수 있다.
+
+경쟁 조건과 동시성 이슈를 해결하기 위해 다른 `Lock`이나 `Lock-free` 접근법을 사용하는 것이 더 나은 성능을 제공할 수 있다.
+
+예를 들어 `ConcurrentHashMap`을 이용하면, 동시성 문제를 해결하면서도 성능을 유지할 수 있다. `synchronized`가 `동시에`에 대한 접근 제어 방식이라면, `ConcurrentHashMap`은 `공유 자원`의 차원에서 문제를 해결하는 접근법을 제공하여 보다 효율적인 동시성 제어를 가능하게 한다.
